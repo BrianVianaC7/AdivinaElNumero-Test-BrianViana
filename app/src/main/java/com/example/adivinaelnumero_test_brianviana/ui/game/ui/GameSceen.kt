@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -213,6 +214,24 @@ fun GameRecord(
     viewModel: GameViewModel
 ) {
 
+    val lowerThanNumbers = remember { mutableStateListOf<Int>() }
+    val higherThanNumbers = remember { mutableStateListOf<Int>() }
+
+    LaunchedEffect(guesses) {
+        lowerThanNumbers.clear()
+        higherThanNumbers.clear()
+
+
+        guesses.forEach { guess ->
+            when (guess.result) {
+                GuessResult.MENOR -> lowerThanNumbers.add(guess.number)
+                GuessResult.MAYOR -> higherThanNumbers.add(guess.number)
+                GuessResult.CORRECTO -> {}
+            }
+        }
+    }
+
+
 
     Text("Historial", modifier)
     if (status == GameStatus.GANADO || status == GameStatus.PERDIDO) {
@@ -234,7 +253,7 @@ fun GameRecord(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            val (box1, box2, box3) = createRefs()
+            val (box1, box2, box3, text, column) = createRefs()
             ConstraintLayout(
                 modifier = Modifier
                     .width(90.dp)
@@ -259,6 +278,21 @@ fun GameRecord(
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
                 )
+                LazyColumn(
+                    modifier = Modifier
+                        .constrainAs(lazyColumnRef) {
+                            top.linkTo(textRef.bottom, margin = 10.dp)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .fillMaxWidth().padding(bottom = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(14) { // Cambia 14 por la cantidad de elementos que tengas
+                        Text(text = "hola")
+                    }
+                }
             }
             ConstraintLayout(
                 modifier = Modifier
@@ -288,7 +322,7 @@ fun GameRecord(
                 LazyColumn(
                     modifier = Modifier
                         .constrainAs(lazyColumnRef) {
-                            top.linkTo(textRef.bottom, margin = 20.dp)
+                            top.linkTo(textRef.bottom, margin = 10.dp)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
@@ -326,11 +360,59 @@ fun GameRecord(
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
                 )
-
-
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(lazyColumnRef) {
+                            top.linkTo(textRef.bottom, margin = 5.dp)
+                            bottom.linkTo(box3.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(14) { // Cambia 14 por la cantidad de elementos que tengas
+                        Text(text = "hola")
+                    }
+                }
             }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(column) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(box2.bottom, margin = 5.dp)
+                        bottom.linkTo(parent.bottom)
+                    },
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.RestartAlt,
+                    contentDescription = "Reiniciar",
+                    tint = Color(0xFFE91E63),
+                    modifier = Modifier.clickable { viewModel.clearHistory() }
+                )
+                Text(text = "Limpiar Historial", fontSize = 12.sp)
+            }
+            Text(
+                text = "Brian Viana",
+                modifier = Modifier
+                    .constrainAs(text) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(column.bottom, margin = 10.dp)
+                        bottom.linkTo(parent.bottom)
+                    },
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Bold
+            )
+
         }
     }
-
 }
+
 
