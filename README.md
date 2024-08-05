@@ -1,7 +1,7 @@
 
 ---
 
-## Adivina el Número - Prueba Técnica
+## Adivina el Número - Prueba Técnica - Brian Viana
 
 Este proyecto es una prueba técnica para el juego "Adivina el Número," desarrollado utilizando Jetpack Compose con Clean Architecture y el patrón de diseño MVVM.
 
