@@ -25,6 +25,10 @@ class GameViewModel : ViewModel() {
     )
     val gameState: StateFlow<GameState> = _gameState
 
+    init {
+        startNewGame(Difficulty.FACIL)
+    }
+
     fun startNewGame(difficulty: Difficulty) {
         val secretNumber = Random.nextInt(difficulty.range.first, difficulty.range.last + 1)
         _gameState.value = GameState(
