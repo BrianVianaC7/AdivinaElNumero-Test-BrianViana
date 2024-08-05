@@ -1,9 +1,12 @@
 package com.example.adivinaelnumero_test_brianviana.ui.game.ui
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.Difficulty
 import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.GameState
 import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.GameStatus
+import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.Guess
+import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.GuessResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.random.Random
@@ -43,5 +46,41 @@ class GameViewModel : ViewModel() {
         )
     }
 
+    fun makeGuess(guess: Int) {
+        val state = _gameState.value
+        if (state.attemptsLeft <= 0 || state.status != GameStatus.JUGANDO) return
 
+        val result = when {
+            guess == state.secretNumber -> GuessResult.CORRECTO
+            guess < state.secretNumber -> GuessResult.MENOR
+            else -> GuessResult.MAYOR
+        }
+
+        val color = when {
+            result == GuessResult.CORRECTO -> Color.Green
+            else -> Color.Red
+        }
+
+        val newGuesses = state.guesses + Guess(guess, result, color)
+
+        val newStatus = when {
+            result == GuessResult.CORRECTO -> GameStatus.GANADO
+            state.attemptsLeft - 1 <= 0 -> GameStatus.PERDIDO
+            else -> GameStatus.JUGANDO
+        }
+
+        val newHistoryNumbers =
+            if (result == GuessResult.CORRECTO || newStatus == GameStatus.PERDIDO) {
+                state.historyNumbers + Guess(guess, result, color)
+            } else {
+                state.historyNumbers
+            }
+
+        _gameState.value = state.copy(
+            attemptsLeft = state.attemptsLeft - 1,
+            guesses = newGuesses,
+            status = newStatus,
+            historyNumbers = newHistoryNumbers
+        )
+    }
 }
