@@ -66,4 +66,19 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Constrain Layout
+    implementation (libs.androidx.constraintlayout.compose)
+
+    //GoogleIcons
+    implementation (libs.androidx.material.icons.extended)
+
+    //Live data
+    implementation(libs.androidx.runtime.livedata)
+
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+
 }
