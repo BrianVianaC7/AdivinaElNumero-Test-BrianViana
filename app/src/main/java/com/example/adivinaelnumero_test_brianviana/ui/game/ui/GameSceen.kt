@@ -3,14 +3,17 @@ package com.example.adivinaelnumero_test_brianviana.ui.game.ui
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -232,7 +235,7 @@ fun GameRecord(
                 .padding(16.dp)
         ) {
             val (box1, box2, box3) = createRefs()
-            Box(
+            ConstraintLayout(
                 modifier = Modifier
                     .width(90.dp)
                     .height(180.dp)
@@ -243,17 +246,21 @@ fun GameRecord(
                         end.linkTo(box2.start)
                     },
             ) {
+                val (textRef, lazyColumnRef) = createRefs()
                 Text(
                     text = "Menor que",
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 10.dp),
+                        .constrainAs(textRef) {
+                            top.linkTo(parent.top, margin = 10.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
                 )
             }
-            Box(
+            ConstraintLayout(
                 modifier = Modifier
                     .width(90.dp)
                     .height(180.dp)
@@ -264,18 +271,38 @@ fun GameRecord(
                         end.linkTo(box3.start)
                     },
             ) {
+                val (textRef, lazyColumnRef) = createRefs()
                 Text(
                     text = "Mayor que",
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 10.dp),
+                        .constrainAs(textRef) {
+                            top.linkTo(parent.top, margin = 10.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
                 )
 
+                LazyColumn(
+                    modifier = Modifier
+                        .constrainAs(lazyColumnRef) {
+                            top.linkTo(textRef.bottom, margin = 20.dp)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(14) { // Cambia 14 por la cantidad de elementos que tengas
+                        Text(text = "hola")
+                    }
+                }
+
             }
-            Box(
+            ConstraintLayout(
                 modifier = Modifier
                     .width(90.dp)
                     .height(180.dp)
@@ -286,11 +313,15 @@ fun GameRecord(
                         end.linkTo(parent.end)
                     },
             ) {
+                val (textRef, lazyColumnRef) = createRefs()
                 Text(
                     text = "Historial",
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 10.dp),
+                        .constrainAs(textRef) {
+                            top.linkTo(parent.top, margin = 10.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
