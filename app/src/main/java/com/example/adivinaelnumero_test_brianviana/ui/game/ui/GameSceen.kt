@@ -3,7 +3,10 @@ package com.example.adivinaelnumero_test_brianviana.ui.game.ui
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -53,24 +56,29 @@ fun GameScreen(viewModel: GameViewModel = viewModel()) {
                 Modifier.align(Alignment.CenterHorizontally)
             )
 
+            Row {
+                GuessInput(
+                    onGuessSubmitted = { viewModel.makeGuess(it) },
+                    status = gameState.status,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(5.dp)
+                )
 
-            ChooseDifficulty(
-                onDifficultySelected = { difficulty ->
-                    viewModel.startNewGame(difficulty)
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(10.dp)
+                ChooseDifficulty(
+                    onDifficultySelected = { viewModel.startNewGame(it) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(5.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                "Intentos: ${gameState.attemptsLeft}",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-
-            GuessInput(
-                onGuessSubmitted = { viewModel.makeGuess(it) },
-                status = gameState.status,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(5.dp)
-            )
-
         }
 
     }
@@ -165,7 +173,5 @@ fun GuessInput(onGuessSubmitted: (Int) -> Unit, status: GameStatus, modifier: Mo
             focusedLabelColor = Color(0xFFE91E63)
         )
     )
-    Log.e("GuessInput", "isGameJUGANDO: $isGameJUGANDO")
-    Log.e("GuessInput", "guess: $guess")
 }
 
