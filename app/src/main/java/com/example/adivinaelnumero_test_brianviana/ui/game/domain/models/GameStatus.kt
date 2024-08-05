@@ -1,4 +1,5 @@
 package com.example.adivinaelnumero_test_brianviana.ui.game.domain.models
 
-class GameStatus {
+enum class GameStatus {
+    JUGANDO, GANADO, PERDIDO
 }
