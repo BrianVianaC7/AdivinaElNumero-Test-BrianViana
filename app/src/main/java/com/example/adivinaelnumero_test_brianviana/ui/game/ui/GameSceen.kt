@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -254,6 +255,7 @@ fun GameRecord(
                 .padding(16.dp)
         ) {
             val (box1, box2, box3, text, column) = createRefs()
+
             ConstraintLayout(
                 modifier = Modifier
                     .width(90.dp)
@@ -281,16 +283,20 @@ fun GameRecord(
                 LazyColumn(
                     modifier = Modifier
                         .constrainAs(lazyColumnRef) {
-                            top.linkTo(textRef.bottom, margin = 10.dp)
-                            bottom.linkTo(parent.bottom)
+                            top.linkTo(textRef.bottom, margin = 20.dp)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }
-                        .fillMaxWidth().padding(bottom = 20.dp),
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(14) { // Cambia 14 por la cantidad de elementos que tengas
-                        Text(text = "hola")
+                    items(higherThanNumbers) { number ->
+                        Text(
+                            number.toString(),
+                            Modifier.padding(start = 16.dp),
+                            color = Color.Black
+                        )
                     }
                 }
             }
@@ -322,16 +328,20 @@ fun GameRecord(
                 LazyColumn(
                     modifier = Modifier
                         .constrainAs(lazyColumnRef) {
-                            top.linkTo(textRef.bottom, margin = 10.dp)
-                            bottom.linkTo(parent.bottom)
+                            top.linkTo(textRef.bottom, margin = 20.dp)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(14) { // Cambia 14 por la cantidad de elementos que tengas
-                        Text(text = "hola")
+                    items(lowerThanNumbers) { number ->
+                        Text(
+                            number.toString(),
+                            Modifier.padding(start = 16.dp),
+                            color = Color.Black
+                        )
                     }
                 }
 
@@ -364,16 +374,20 @@ fun GameRecord(
                     modifier = Modifier
                         .fillMaxSize()
                         .constrainAs(lazyColumnRef) {
-                            top.linkTo(textRef.bottom, margin = 5.dp)
-                            bottom.linkTo(box3.bottom)
+                            top.linkTo(textRef.bottom, margin = 20.dp)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(14) { // Cambia 14 por la cantidad de elementos que tengas
-                        Text(text = "hola")
+                    items(historyNumbers) { guess ->
+                        Text(
+                            text = guess.number.toString(),
+                            Modifier.padding(start = 16.dp),
+                            color = guess.color
+                        )
                     }
                 }
             }
