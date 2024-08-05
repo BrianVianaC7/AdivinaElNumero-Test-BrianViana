@@ -1,5 +1,6 @@
 package com.example.adivinaelnumero_test_brianviana.ui.game.ui
 
+import androidx.collection.mutableIntSetOf
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -15,33 +18,66 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.Difficulty
+import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.GameStatus
 
 @Composable
 fun GameScreen(viewModel: GameViewModel = viewModel()) {
     val gameState by viewModel.gameState.collectAsState()
+    var selectedText by remember { mutableIntStateOf(0) }
+
 
     Scaffold(
         topBar = { MyTopAppBar() }
     ) { innerPadding ->
 
-        Column {
-            ChooseDifficulty(onDifficultySelected = { difficulty ->
-                viewModel.startNewGame(difficulty)
-            }, modifier = Modifier.padding(innerPadding))
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(10.dp)
+        ) {
+            Text(
+                text = "Estado: ${gameState.status.name}",
+                Modifier.align(Alignment.CenterHorizontally)
+            )
+
+
+            ChooseDifficulty(
+                onDifficultySelected = { difficulty ->
+                    viewModel.startNewGame(difficulty)
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(10.dp)
+            )
+
+            GuessInput(
+                onGuessSubmitted = { selectedText = it },
+                status = gameState.status,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(5.dp)
+            )
+
         }
 
     }
@@ -104,5 +140,37 @@ fun ChooseDifficulty(onDifficultySelected: (Difficulty) -> Unit, modifier: Modif
         }
 
     }
+}
+
+@Composable
+fun GuessInput(onGuessSubmitted: (Int) -> Unit, status: GameStatus, modifier: Modifier) {
+    var guess by remember { mutableStateOf("") }
+    val isGameJUGANDO = status == GameStatus.JUGANDO
+
+    fun submitGuess() {
+        val guessNumber = guess.toIntOrNull()
+        if (guessNumber != null) {
+            onGuessSubmitted(guessNumber)
+            guess = ""
+        }
+    }
+    OutlinedTextField(
+        value = guess,
+        onValueChange = { guess = it },
+        modifier = modifier,
+        label = { Text(text = "Numero") },
+        placeholder = { Text(text = "####", color = Color.Gray) },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(onDone = { submitGuess() }),
+        enabled = isGameJUGANDO,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color(0xFFE91E63),
+            focusedLabelColor = Color(0xFFE91E63)
+        )
+    )
 }
 
