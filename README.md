@@ -1,5 +1,27 @@
-![image](https://github.com/user-attachments/assets/df2721c1-6946-4911-a1d7-65af9b278839)
 
+---
+
+## Adivina el Número - Prueba Técnica
+
+Este proyecto es una prueba técnica para el juego "Adivina el Número," desarrollado utilizando Jetpack Compose con Clean Architecture y el patrón de diseño MVVM.
+
+### Descripción del Proyecto
+
+La aplicación consiste en un juego en el que los usuarios deben adivinar un número secreto. La interfaz de usuario está construida completamente con Jetpack Compose, lo que permite un diseño moderno y reactivo. El proyecto sigue la arquitectura limpia, separando claramente la lógica de negocio de la presentación, y utiliza el patrón MVVM para manejar el estado de la UI de manera eficiente.
+
+### Tecnologías y Librerías Utilizadas
+
+- **Jetpack Compose**
+- **Clean Architecture**
+- **MVVM (Model-View-ViewModel)**
+- **Material3**
+- **Constraint Layout**
+- **Google Icons**
+- **LiveData**
+
+---
+
+![image](https://github.com/user-attachments/assets/df2721c1-6946-4911-a1d7-65af9b278839)
 
 ![image](https://github.com/user-attachments/assets/4ff2a000-f361-4f9b-8bed-dcd1c1bb9a33)
 
