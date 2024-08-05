@@ -18,6 +18,7 @@ La aplicación consiste en un juego en el que los usuarios deben adivinar un nú
 - **Constraint Layout**
 - **Google Icons**
 - **LiveData**
+- **Flows**
 
 ---
 
