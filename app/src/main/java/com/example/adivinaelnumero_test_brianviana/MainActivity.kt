@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.adivinaelnumero_test_brianviana.ui.game.ui.GameScreen
+import com.example.adivinaelnumero_test_brianviana.ui.game.ui.GameViewModel
 import com.example.adivinaelnumero_test_brianviana.ui.theme.AdivinaElNumeroTestBrianVianaTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +22,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AdivinaElNumeroTestBrianVianaTheme {
-                GameScreen()
+                val viewModel: GameViewModel = viewModel()
+                GameScreen(viewModel = viewModel)
             }
         }
     }
