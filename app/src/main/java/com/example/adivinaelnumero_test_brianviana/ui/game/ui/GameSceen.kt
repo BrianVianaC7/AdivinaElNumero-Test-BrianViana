@@ -1,17 +1,24 @@
 package com.example.adivinaelnumero_test_brianviana.ui.game.ui
 
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -23,20 +30,28 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.Difficulty
 import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.GameStatus
+import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.Guess
+import com.example.adivinaelnumero_test_brianviana.ui.game.domain.models.GuessResult
 
 @Composable
 fun GameScreen(viewModel: GameViewModel = viewModel()) {
@@ -79,11 +94,21 @@ fun GameScreen(viewModel: GameViewModel = viewModel()) {
                 "Intentos: ${gameState.attemptsLeft}",
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            GameRecord(
+                guesses = gameState.guesses,
+                secretNumber = gameState.secretNumber,
+                status = gameState.status,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                historyNumbers = gameState.historyNumbers,
+                viewModel = viewModel
+            )
+
         }
 
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -173,5 +198,108 @@ fun GuessInput(onGuessSubmitted: (Int) -> Unit, status: GameStatus, modifier: Mo
             focusedLabelColor = Color(0xFFE91E63)
         )
     )
+}
+
+@Composable
+fun GameRecord(
+    guesses: List<Guess>,
+    secretNumber: Int?,
+    status: GameStatus,
+    historyNumbers: List<Guess>,
+    modifier: Modifier,
+    viewModel: GameViewModel
+) {
+
+
+    Text("Historial", modifier)
+    if (status == GameStatus.GANADO || status == GameStatus.PERDIDO) {
+        Text("Numero correcto: $secretNumber")
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp,
+            focusedElevation = 20.dp
+        ),
+        shape = CardDefaults.shape
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            val (box1, box2, box3) = createRefs()
+            Box(
+                modifier = Modifier
+                    .width(90.dp)
+                    .height(180.dp)
+                    .border(2.dp, Color(0xFFE91E63))
+                    .padding(5.dp)
+                    .constrainAs(box1) {
+                        start.linkTo(parent.start)
+                        end.linkTo(box2.start)
+                    },
+            ) {
+                Text(
+                    text = "Menor que",
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 10.dp),
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .width(90.dp)
+                    .height(180.dp)
+                    .border(2.dp, Color(0xFFE91E63))
+                    .padding(5.dp)
+                    .constrainAs(box2) {
+                        start.linkTo(box1.end)
+                        end.linkTo(box3.start)
+                    },
+            ) {
+                Text(
+                    text = "Mayor que",
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 10.dp),
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+
+            }
+            Box(
+                modifier = Modifier
+                    .width(90.dp)
+                    .height(180.dp)
+                    .border(2.dp, Color(0xFFE91E63))
+                    .padding(5.dp)
+                    .constrainAs(box3) {
+                        start.linkTo(box2.end)
+                        end.linkTo(parent.end)
+                    },
+            ) {
+                Text(
+                    text = "Historial",
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 10.dp),
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+
+
+            }
+        }
+    }
+
 }
 
